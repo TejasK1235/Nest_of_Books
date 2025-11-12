@@ -5,11 +5,11 @@ class Observer:
 
 class CustomerNotifier(Observer):
     def update(self, order_id: int, status: str):
-        print(f"📢 Notification to Customer: Order #{order_id} is now {status}.")
+        print(f"Notification to Customer: Order #{order_id} is now {status}.")
 
 class AdminNotifier(Observer):
     def update(self, order_id: int, status: str):
-        print(f"📢 Notification to Admin: Order #{order_id} changed to {status}.")
+        print(f"Notification to Admin: Order #{order_id} changed to {status}.")
 
 class Notifier:
     """

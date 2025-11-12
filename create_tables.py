@@ -71,7 +71,7 @@ def setup_database():
     """)
 
     db.conn.commit()
-    print("✅ All tables verified or created successfully!")
+    print("All tables verified or created successfully!")
 
 if __name__ == "__main__":
     setup_database()

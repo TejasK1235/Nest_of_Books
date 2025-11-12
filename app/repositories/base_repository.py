@@ -16,7 +16,7 @@ class BaseRepository:
                 cls._connection = sqlite3.connect(db_name, check_same_thread=False)
                 cls._connection.row_factory = sqlite3.Row  # fetch as dict-like
             except sqlite3.Error as e:
-                print(f"❌ Failed to connect to database '{db_name}': {e}")
+                print(f"Failed to connect to database '{db_name}': {e}")
                 raise
         return cls._instance
 
@@ -36,7 +36,7 @@ class BaseRepository:
             return cursor
         except sqlite3.Error as e:
             self.conn.rollback()
-            print(f"❌ DB Execute Error: {e}\nQuery: {query}\nParams: {params}")
+            print(f"DB Execute Error: {e}\nQuery: {query}\nParams: {params}")
             raise
 
     def fetch_all(self, query: str, params: tuple = ()) -> list[sqlite3.Row]:
@@ -46,7 +46,7 @@ class BaseRepository:
             cursor.execute(query, params)
             return cursor.fetchall()
         except sqlite3.Error as e:
-            print(f"❌ DB FetchAll Error: {e}\nQuery: {query}\nParams: {params}")
+            print(f"DB FetchAll Error: {e}\nQuery: {query}\nParams: {params}")
             return []
 
     def fetch_one(self, query: str, params: tuple = ()) -> sqlite3.Row | None:
@@ -56,7 +56,7 @@ class BaseRepository:
             cursor.execute(query, params)
             return cursor.fetchone()
         except sqlite3.Error as e:
-            print(f"❌ DB FetchOne Error: {e}\nQuery: {query}\nParams: {params}")
+            print(f"DB FetchOne Error: {e}\nQuery: {query}\nParams: {params}")
             return None
 
     def close_connection(self):
@@ -66,6 +66,6 @@ class BaseRepository:
                 self._connection.commit()
                 self._connection.close()
                 self._connection = None
-                print("✅ Database connection closed.")
+                print("Database connection closed.")
         except sqlite3.Error as e:
-            print(f"⚠️ Error closing connection: {e}")
+            print(f"Error closing connection: {e}")

@@ -17,7 +17,7 @@ class BookRepository(BaseRepository):
                 stock INTEGER
             )""")
         except Exception as e:
-            print(f"❌ Failed to create books table: {e}")
+            print(f"Failed to create books table: {e}")
 
     def add_book(self, title: str, author: str, price: float, stock: int) -> int:
         try:
@@ -27,7 +27,7 @@ class BookRepository(BaseRepository):
             )
             return self.conn.execute("SELECT last_insert_rowid()").fetchone()[0]
         except Exception as e:
-            print(f"❌ Failed to add book: {e}")
+            print(f"Failed to add book: {e}")
             return -1
 
     def get_book_by_id(self, book_id: int) -> Book | None:
@@ -37,7 +37,7 @@ class BookRepository(BaseRepository):
                 return None
             return Book(row["book_id"], row["title"], row["author"], row["price"], row["stock"])
         except Exception as e:
-            print(f"❌ Error fetching book {book_id}: {e}")
+            print(f"Error fetching book {book_id}: {e}")
             return None
 
     def get_all_books(self):
@@ -45,20 +45,20 @@ class BookRepository(BaseRepository):
             rows = self.fetch_all("SELECT * FROM books")
             return [Book(r["book_id"], r["title"], r["author"], r["price"], r["stock"]) for r in rows]
         except Exception as e:
-            print(f"❌ Error fetching books: {e}")
+            print(f"Error fetching books: {e}")
             return []
 
     def update_book(self, book_id: int, new_stock: int):
         try:
             self.execute("UPDATE books SET stock = ? WHERE book_id = ?", (new_stock, book_id))
         except Exception as e:
-            print(f"❌ Failed to update stock for book {book_id}: {e}")
+            print(f"Failed to update stock for book {book_id}: {e}")
 
     def delete_book(self, book_id: int):
         try:
             self.execute("DELETE FROM books WHERE book_id = ?", (book_id,))
         except Exception as e:
-            print(f"❌ Failed to delete book {book_id}: {e}")
+            print(f"Failed to delete book {book_id}: {e}")
 
     # --- Cart Persistence Helpers ---
     def save_cart(self, user_id: int, cart):
@@ -70,7 +70,7 @@ class BookRepository(BaseRepository):
                     (user_id, item.book.book_id, item.quantity),
                 )
         except Exception as e:
-            print(f"❌ Failed to save cart for user {user_id}: {e}")
+            print(f"Failed to save cart for user {user_id}: {e}")
 
     def load_cart(self, user_id: int):
         try:
@@ -84,6 +84,6 @@ class BookRepository(BaseRepository):
                     cart.add_item(book, r["quantity"])
             return cart
         except Exception as e:
-            print(f"❌ Failed to load cart for user {user_id}: {e}")
+            print(f"Failed to load cart for user {user_id}: {e}")
             from app.models.cart import Cart
             return Cart(user_id)

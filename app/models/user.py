@@ -19,7 +19,7 @@ class User:
         self.user_id = user_id
         self.name = name
         self.email = email
-        self._password = password    # NOTE: plain compare for console demo
+        self._password = password    # plain compare for console demo
         self.role = role             # 'customer' | 'admin'
         self._logged_in = False
 

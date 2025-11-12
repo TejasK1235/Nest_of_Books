@@ -24,7 +24,7 @@ class OrderRepository(BaseRepository):
                 status TEXT
             )""")
         except Exception as e:
-            print(f"❌ Failed to create order/payment tables: {e}")
+            print(f"Failed to create order/payment tables: {e}")
 
     def create_order(self, user_id: int, total_amount: float, status: str = "Pending") -> int:
         try:
@@ -34,7 +34,7 @@ class OrderRepository(BaseRepository):
             )
             return self.conn.execute("SELECT last_insert_rowid()").fetchone()[0]
         except Exception as e:
-            print(f"❌ Failed to create order for user {user_id}: {e}")
+            print(f"Failed to create order for user {user_id}: {e}")
             return -1
 
     def get_orders_by_user(self, user_id: int):
@@ -42,14 +42,14 @@ class OrderRepository(BaseRepository):
             rows = self.fetch_all("SELECT * FROM orders WHERE user_id = ?", (user_id,))
             return [Order(r["order_id"], r["user_id"], r["total_amount"], r["status"]) for r in rows]
         except Exception as e:
-            print(f"❌ Error fetching orders for user {user_id}: {e}")
+            print(f"Error fetching orders for user {user_id}: {e}")
             return []
 
     def update_order_status(self, order_id: int, new_status: str):
         try:
             self.execute("UPDATE orders SET status = ? WHERE order_id = ?", (new_status, order_id))
         except Exception as e:
-            print(f"❌ Failed to update order {order_id}: {e}")
+            print(f"Failed to update order {order_id}: {e}")
 
     # --- Payment Methods ---
     def add_payment(self, order_id: int, method: str, status: str = PaymentStatus.PENDING) -> int:
@@ -60,14 +60,14 @@ class OrderRepository(BaseRepository):
             )
             return self.conn.execute("SELECT last_insert_rowid()").fetchone()[0]
         except Exception as e:
-            print(f"❌ Failed to add payment for order {order_id}: {e}")
+            print(f"Failed to add payment for order {order_id}: {e}")
             return -1
 
     def update_payment_status(self, payment_id: int, new_status: str):
         try:
             self.execute("UPDATE payments SET status = ? WHERE payment_id = ?", (new_status, payment_id))
         except Exception as e:
-            print(f"❌ Failed to update payment {payment_id}: {e}")
+            print(f"Failed to update payment {payment_id}: {e}")
 
     def get_payment_by_order(self, order_id: int) -> Payment | None:
         try:
@@ -76,5 +76,5 @@ class OrderRepository(BaseRepository):
                 return None
             return Payment(row["payment_id"], row["order_id"], row["method"], row["status"])
         except Exception as e:
-            print(f"❌ Error fetching payment for order {order_id}: {e}")
+            print(f"Error fetching payment for order {order_id}: {e}")
             return None

@@ -31,45 +31,45 @@ class CartController:
     def add_to_cart(self, user_id: int, book_id: int, qty: int) -> str:
         try:
             if qty is None or qty <= 0:
-                return "❌ Quantity must be a positive integer."
+                return "Quantity must be a positive integer."
             book = self.book_repo.get_book_by_id(book_id)
             if not book:
-                return "❌ Book not found."
+                return "Book not found."
             if book.stock < qty:
-                return "❌ Not enough stock available."
+                return "Not enough stock available."
             cart = self._get_cart(user_id)
             cart.add_item(book, qty)
             self.book_repo.save_cart(user_id, cart)
-            return f"✅ Added {qty} × '{book.title}' to cart."
+            return f"Added {qty} × '{book.title}' to cart."
         except Exception as e:
-            return f"❌ Failed to add to cart: {e}"
+            return f"Failed to add to cart: {e}"
 
     def remove_from_cart(self, user_id: int, book_id: int) -> str:
         try:
             cart = self._get_cart(user_id)
             cart.remove_item(book_id)
             self.book_repo.save_cart(user_id, cart)
-            return f"🗑️ Removed book ID {book_id} from cart."
+            return f"Removed book ID {book_id} from cart."
         except Exception as e:
-            return f"❌ Failed to remove item: {e}"
+            return f"Failed to remove item: {e}"
 
     def update_cart(self, user_id: int, book_id: int, new_qty: int) -> str:
         try:
             if new_qty is None or new_qty <= 0:
-                return "❌ Quantity must be a positive integer."
+                return "Quantity must be a positive integer."
             cart = self._get_cart(user_id)
             cart.update_quantity(book_id, new_qty)
             self.book_repo.save_cart(user_id, cart)
-            return f"🔁 Updated book ID {book_id} to quantity {new_qty}."
+            return f"Updated book ID {book_id} to quantity {new_qty}."
         except Exception as e:
-            return f"❌ Failed to update cart: {e}"
+            return f"Failed to update cart: {e}"
 
     def view_cart(self, user_id: int) -> str:
         try:
             cart = self._get_cart(user_id)
             if cart.is_empty():
-                return "🛒 Your cart is empty."
-            lines = ["\n🛒 Cart contents:"]
+                return "Your cart is empty."
+            lines = ["\nCart contents:"]
             for item in cart.items:
                 lines.append(
                     f"  [ID:{item.book.book_id}] {item.book.title} — Qty: {item.quantity} — ₹{item.subtotal}"
@@ -77,13 +77,13 @@ class CartController:
             lines.append(f"Total: ₹{cart.calculate_total()}")
             return "\n".join(lines)
         except Exception as e:
-            return f"❌ Could not load cart: {e}"
+            return f"Could not load cart: {e}"
 
     def clear_cart(self, user_id: int) -> str:
         try:
             cart = self._get_cart(user_id)
             cart.clear_cart()
             self.book_repo.save_cart(user_id, cart)
-            return "🧹 Cart cleared."
+            return "Cart cleared."
         except Exception as e:
-            return f"❌ Failed to clear cart: {e}"
+            return f"Failed to clear cart: {e}"
